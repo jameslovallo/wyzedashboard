@@ -35,6 +35,7 @@ function createWindow() {
     frame: process.platform === "darwin" ? undefined : false,
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : undefined,
     webPreferences: {
+      webviewTag: true,
       // Change from /quasar.conf.js > electron > nodeIntegration;
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
       nodeIntegration: QUASAR_NODE_INTEGRATION,

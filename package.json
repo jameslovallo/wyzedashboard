@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "build": "quasar b -m electron",
-    "dev": "duasar d -m electron",
+    "dev": "quasar d -m electron",
     "icongenie": "icongenie generate -i src/assets/logo.png"
   },
   "dependencies": {

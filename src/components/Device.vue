@@ -1,28 +1,32 @@
 <template>
 	<div class="device col col-xs-12 col-sm-6 col-md-3 q-pa-sm">
 		<q-card bordered rounded flat>
-			<q-card-section horizontal style="flex-flow: row wrap;">
-				<q-card-section class="flex column justify-center">
-					<q-icon :name="icon" size="xl" />
-				</q-card-section>
-				<q-card-section
-					class="flex column justify-center"
-					style="flex-grow: 1; flex-shrink: 1;"
-				>
-					<div class="body">{{ title }}</div>
-					<div class="caption" style="color: #555;">{{ type }}</div>
-				</q-card-section>
-				<q-card-section class="flex column justify-center">
-					<q-btn
-						outline
-						round
-						:icon="statusIcon"
-						:color="color"
-						@click="toggle"
-					/>
-				</q-card-section>
-			</q-card-section>
-			<iframe v-show="false" :src="hook" frameborder="0"></iframe>
+			<div v-if="feed" class="feed">
+				<webview
+					:src="
+						`https://ipcamlive.com/player/player.php?alias=${feed}&autoplay=1&disablevideofit=1`
+					"
+				></webview>
+			</div>
+			<q-item class="q-px-sm">
+				<q-item-section avatar>
+					<q-icon :name="icon" color="grey-10" size="34px" />
+				</q-item-section>
+				<q-item-section>
+					<q-item-label lines="1">
+						<span class="text-grey-10">{{ title }}</span>
+					</q-item-label>
+					<q-item-label caption lines="1">
+						{{ type }}
+					</q-item-label>
+				</q-item-section>
+				<q-item-section side v-if="action">
+					<div class="text-primary q-gutter-xs">
+						<q-btn size="12px" flat dense label="on" @click="on" />
+						<q-btn size="12px" flat dense label="off" @click="off" />
+					</div>
+				</q-item-section>
+			</q-item>
 		</q-card>
 		<slot />
 	</div>
@@ -34,91 +38,53 @@
 		mdiPowerPlug,
 		mdiLightbulb,
 		mdiLightbulbOutline,
+		mdiVideo,
+		mdiVideoOutline,
 		mdiHelp,
 		mdiPower
 	} from "@mdi/js";
 
 	export default {
 		name: "Device",
-		props: {
-			title: {
-				type: String,
-				required: true
-			},
-			type: {
-				type: String,
-				required: true
-			},
-			action: {
-				type: String,
-				required: true
-			},
-			webhooks_key: {
-				type: String,
-				required: true
-			}
-		},
+		props: ["title", "type", "action", "feed", "webhooks_key"],
 		data: () => ({
-			on: null,
-			hook: "",
 			icons: {
 				plug: mdiPowerPlug,
 				plugOutline: mdiPowerPlugOutline,
 				bulb: mdiLightbulb,
 				bulbOutline: mdiLightbulbOutline,
+				camera: mdiVideo,
+				cameraOutline: mdiVideoOutline,
 				unknown: mdiHelp,
 				power: mdiPower
 			}
 		}),
 		computed: {
 			icon() {
-				let type = this.type === "Bulb" ? "bulb" : "plug";
+				const iconIndex = {
+					Bulb: "bulb",
+					Plug: "plug",
+					Camera: "camera"
+				};
+				let type = iconIndex[`${this.type}`];
 				let status = this.on === true ? "" : "Outline";
 				return this.icons[`${type + status}`];
-			},
-			statusIcon() {
-				return this.on === null ? this.icons.unknown : this.icons.power;
-			},
-			color() {
-				switch (this.on) {
-					case null:
-						return "warning";
-						break;
-					case true:
-						return "primary";
-						break;
-					case false:
-						return "secondary";
-						break;
-				}
 			}
 		},
 		methods: {
-			toggle() {
-				let ifttt = (action, key) => {
-					return `https://maker.ifttt.com/trigger/${action}/with/key/${key}`;
-				};
-
+			on() {
 				const action = this.action;
 				const key = this.webhooks_key;
-
-				switch (this.on) {
-					case null: {
-						this.on = true;
-						this.hook = ifttt(action, key);
-						break;
-					}
-					case false: {
-						this.on = true;
-						this.hook = ifttt(action, key);
-						break;
-					}
-					case true: {
-						this.on = false;
-						this.hook = ifttt(action + "_off", key);
-						break;
-					}
-				}
+				fetch(`https://maker.ifttt.com/trigger/${action}/with/key/${key}`, {
+					method: "POST"
+				});
+			},
+			off() {
+				const action = this.action;
+				const key = this.webhooks_key;
+				fetch(`https://maker.ifttt.com/trigger/${action}_off/with/key/${key}`, {
+					method: "POST"
+				});
 			}
 		}
 	};
@@ -133,5 +99,18 @@
 		position: absolute;
 		top: -0px;
 		right: -0px;
+	}
+
+	.feed {
+		position: relative;
+		padding-top: calc(9 / 16 * 100%);
+	}
+
+	.feed webview {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 	}
 </style>

@@ -69,6 +69,29 @@
 						</Device>
 					</transition-group>
 				</draggable>
+				<draggable v-model="cameras">
+					<transition-group class="row">
+						<Device
+							v-for="(device, i) in cameras"
+							:key="device.feed"
+							:action="device.action"
+							:feed="device.feed"
+							:type="device.type"
+							:title="device.title"
+							:webhooks_key="webhooks_key"
+						>
+							<q-btn
+								class="device-close"
+								icon="close"
+								color="red"
+								size="xs"
+								round
+								@click="cameras.splice(i, 1), (edit = false)"
+								v-show="edit === true"
+							/>
+						</Device>
+					</transition-group>
+				</draggable>
 				<q-dialog v-model="add">
 					<q-card>
 						<q-card-section class="row">
@@ -77,43 +100,80 @@
 							<q-btn icon="close" flat round dense v-close-popup />
 						</q-card-section>
 						<q-separator />
-						<q-card-section>
-							<q-input
-								label="IFTTT Webhook Action"
-								v-model="newDevice.action"
-								color="primary"
-								filled
-								style="min-width: 300px"
-								class="q-mb-md"
-							/>
-							<q-input
-								label="Device Name"
-								v-model="newDevice.title"
-								color="primary"
-								filled
-								style="min-width: 300px"
-								class="q-mb-md"
-							/>
-							<q-select
-								label="Device Type"
-								:options="['Bulb', 'Plug']"
-								v-model="newDevice.type"
-								color="primary"
-								filled
-								style="min-width: 300px"
-								class="q-mb-md"
-							/>
-							<q-btn
-								label="Add Device"
-								icon="add"
-								color="primary"
-								@click="
-									devices.push(newDevice);
-									newDevice = {};
-									add = false;
-								"
-							/>
-						</q-card-section>
+						<q-tabs v-model="deviceTab">
+							<q-tab name="Bulb" label="Bulb" />
+							<q-tab name="Plug" label="Plug" />
+							<q-tab name="Camera" label="Camera" />
+						</q-tabs>
+						<q-tab-panels v-model="deviceTab">
+							<q-tab-panel v-for="d in ['Bulb', 'Plug']" :key="d" :name="d">
+								<q-input
+									label="Device Name"
+									v-model="newDevice.title"
+									color="primary"
+									filled
+									style="min-width: 300px"
+									class="q-mb-md"
+								/>
+								<q-input
+									label="IFTTT Webhook Action"
+									v-model="newDevice.action"
+									color="primary"
+									filled
+									style="min-width: 300px"
+									class="q-mb-md"
+								/>
+								<q-btn
+									label="Add Device"
+									icon="add"
+									color="primary"
+									@click="addDevice"
+								/>
+							</q-tab-panel>
+							<q-tab-panel name="Camera">
+								<q-input
+									label="Device Name"
+									v-model="newDevice.title"
+									color="primary"
+									filled
+									style="min-width: 300px"
+									class="q-mb-md"
+								/>
+								<q-input
+									label="IPCamLive Camera Alias"
+									v-model="newDevice.feed"
+									color="primary"
+									filled
+									style="min-width: 300px"
+									class="q-mb-md"
+								/>
+								<p class="caption text-grey-8">
+									Your camera's "alias" on
+									<a href="www.ipcamlive.com">ipcamlive.com</a>. To connect your
+									camera to ipcamlive, you will need to install the
+									<a
+										href="https://support.wyzecam.com/hc/en-us/articles/360026245231-Wyze-Cam-RTSP"
+										>Wyze RTSP firmware</a
+									>
+									on your camera and forward port 554 on your router for your
+									camera's IP address.
+								</p>
+								<q-input
+									label="IFTTT Webhook Action (Optional)"
+									v-model="newDevice.action"
+									color="primary"
+									filled
+									style="min-width: 300px"
+									class="q-mb-md"
+								/>
+								<q-btn
+									label="Add Device"
+									icon="add"
+									color="primary"
+									@click="addDevice"
+								/>
+							</q-tab-panel>
+						</q-tab-panels>
 					</q-card>
 				</q-dialog>
 			</q-page>
@@ -138,6 +198,7 @@
 			return {
 				add: false,
 				edit: false,
+				deviceTab: "Bulb",
 				icons: {
 					plus: mdiPlusCircleOutline,
 					edit: mdiPencilCircleOutline
@@ -165,10 +226,19 @@
 						title: "Living Room",
 						type: "Bulb"
 					}
-				]
+				],
+				cameras: []
 			};
 		},
 		methods: {
+			addDevice() {
+				this.newDevice.type = this.deviceTab;
+				this.newDevice.type === "Camera"
+					? this.cameras.push(this.newDevice)
+					: this.devices.push(this.newDevice);
+				this.newDevice = {};
+				this.add = false;
+			},
 			minimize() {
 				if (process.env.MODE === "electron") {
 					this.$q.electron.remote.BrowserWindow.getFocusedWindow().minimize();
@@ -195,10 +265,16 @@
 			if (localStorage.devices) {
 				this.devices = JSON.parse(localStorage.devices);
 			}
+			if (localStorage.cameras) {
+				this.cameras = JSON.parse(localStorage.cameras);
+			}
 		},
 		watch: {
 			devices(newDevices) {
 				localStorage.devices = JSON.stringify(newDevices);
+			},
+			cameras(newCameras) {
+				localStorage.cameras = JSON.stringify(newCameras);
 			}
 		}
 	};

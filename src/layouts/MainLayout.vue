@@ -140,7 +140,7 @@
 									class="q-mb-md"
 								/>
 								<q-input
-									label="IPCamLive Camera Alias"
+									label="RTSP Embed Code"
 									v-model="newDevice.feed"
 									color="primary"
 									filled
@@ -148,15 +148,16 @@
 									class="q-mb-md"
 								/>
 								<p class="caption text-grey-8">
-									Your camera's "alias" on
-									<a href="www.ipcamlive.com">ipcamlive.com</a>. To connect your
-									camera to ipcamlive, you will need to install the
+									Your embed code from
+									<a href="rtsp.me">RTSP.ME</a>. To connect your camera to
+									RTSP.ME, you will need to install the
 									<a
 										href="https://support.wyzecam.com/hc/en-us/articles/360026245231-Wyze-Cam-RTSP"
 										>Wyze RTSP firmware</a
 									>
-									on your camera and forward port 554 on your router for your
-									camera's IP address.
+									on your camera, forward port 554 on your router for your
+									camera's IP address, and use a dynamic DNS provider or a
+									static public IP address.
 								</p>
 								<q-input
 									label="IFTTT Webhook Action (Optional)"
@@ -276,13 +277,6 @@
 			cameras(newCameras) {
 				localStorage.cameras = JSON.stringify(newCameras);
 			}
-		},
-		mounted() {
-			document.querySelectorAll(".feed").forEach(el => {
-				el.addEventListener("click", () => {
-					el.classList.toggle("full");
-				});
-			});
 		}
 	};
 </script>

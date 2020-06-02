@@ -1,15 +1,12 @@
 <template>
-	<div class="device col col-xs-12 col-sm-6 col-md-3 q-pa-sm">
+	<div
+		:class="[
+			'device col col-xs-12 col-sm-6 q-pa-sm',
+			type === 'Camera' ? 'col-md-4' : 'col-md-3'
+		]"
+	>
 		<q-card bordered rounded flat>
-			<div v-if="feed" class="feed">
-				<webview
-					:src="
-						`https://ipcamlive.com/player/player.php?alias=${feed}&autoplay=1&disablevideofit=1`
-					"
-					allowfullscreen
-					style="pointer-events: none;"
-				></webview>
-			</div>
+			<div v-if="feed" class="feed" v-html="feed" />
 			<q-item class="q-px-sm">
 				<q-item-section avatar>
 					<q-icon :name="icon" color="grey-10" size="34px" />
@@ -108,7 +105,7 @@
 		padding-top: calc(9 / 16 * 100%);
 	}
 
-	.feed webview {
+	.feed iframe {
 		position: absolute;
 		top: 0;
 		left: 0;

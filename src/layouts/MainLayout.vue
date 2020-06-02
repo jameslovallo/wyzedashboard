@@ -283,11 +283,16 @@
 				"#playerdiv {position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;}";
 			let playeriframe =
 				"#playeriframe {position: absolute; top: 0; left: 0; height: 100% !important; width: 100% !important;}";
+
 			document.querySelectorAll(".video").forEach(el => {
 				el.addEventListener("dom-ready", function() {
 					el.insertCSS(body + playerdiv + playeriframe);
 					el.style.pointerEvents = "none";
 				});
+
+				setInterval(() => {
+					el.reload();
+				}, 240000);
 			});
 
 			document.querySelectorAll(".feed").forEach(el => {

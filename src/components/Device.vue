@@ -2,13 +2,7 @@
 	<div class="device col col-xs-12 col-sm-6 col-md-3 q-pa-sm">
 		<q-card bordered rounded flat>
 			<div v-if="feed" class="feed">
-				<webview
-					:src="
-						`https://ipcamlive.com/player/player.php?alias=${feed}&autoplay=1&disablevideofit=1`
-					"
-					allowfullscreen
-					style="pointer-events: none;"
-				></webview>
+				<webview class="video" :src="feed"></webview>
 			</div>
 			<q-item class="q-px-sm">
 				<q-item-section avatar>
@@ -108,11 +102,12 @@
 		padding-top: calc(9 / 16 * 100%);
 	}
 
-	.feed webview {
+	.video {
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
+		pointer-events: none;
 	}
 </style>

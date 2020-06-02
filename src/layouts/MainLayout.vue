@@ -140,7 +140,7 @@
 									class="q-mb-md"
 								/>
 								<q-input
-									label="IPCamLive Camera Alias"
+									label="IPCamLive Camera uRL"
 									v-model="newDevice.feed"
 									color="primary"
 									filled
@@ -148,7 +148,7 @@
 									class="q-mb-md"
 								/>
 								<p class="caption text-grey-8">
-									Your camera's "alias" on
+									Your camera's "live" tab url on
 									<a href="www.ipcamlive.com">ipcamlive.com</a>. To connect your
 									camera to ipcamlive, you will need to install the
 									<a
@@ -278,6 +278,17 @@
 			}
 		},
 		mounted() {
+			let body = "body {overflow: hidden !important;}";
+			let playerdiv =
+				"#playerdiv {position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;}";
+			let playeriframe =
+				"#playeriframe {position: absolute; top: 0; left: 0; height: 100% !important; width: 100% !important;}";
+			document.querySelectorAll(".video").forEach(el => {
+				el.addEventListener("dom-ready", function() {
+					el.insertCSS(body + playerdiv + playeriframe);
+				});
+			});
+
 			document.querySelectorAll(".feed").forEach(el => {
 				el.addEventListener("click", () => {
 					el.classList.toggle("full");

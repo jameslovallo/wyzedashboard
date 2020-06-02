@@ -6,6 +6,8 @@
 					:src="
 						`https://ipcamlive.com/player/player.php?alias=${feed}&autoplay=1&disablevideofit=1`
 					"
+					allowfullscreen
+					style="pointer-events: none;"
 				></webview>
 			</div>
 			<q-item class="q-px-sm">

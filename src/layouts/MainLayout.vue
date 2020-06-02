@@ -9,11 +9,11 @@
 			style="background: linear-gradient(to bottom, #03CCC9, #0DC4E8)"
 			class="drag"
 		>
-			<q-toolbar>
+			<q-toolbar height="60px">
 				<q-img
 					src="~assets/wyze-logo-white.svg"
 					width="110px"
-					class="q-mr-md q-my-md"
+					class="q-mr-md"
 				/>
 				<q-btn
 					:icon="icons.plus"
@@ -276,6 +276,13 @@
 			cameras(newCameras) {
 				localStorage.cameras = JSON.stringify(newCameras);
 			}
+		},
+		mounted() {
+			document.querySelectorAll(".feed").forEach(el => {
+				el.addEventListener("click", () => {
+					el.classList.toggle("full");
+				});
+			});
 		}
 	};
 </script>
@@ -288,5 +295,12 @@
 	.no-drag {
 		-webkit-user-select: none;
 		-webkit-app-region: no-drag;
+	}
+	.full {
+		position: fixed;
+		top: 50px;
+		right: 0;
+		bottom: 0;
+		left: 0;
 	}
 </style>

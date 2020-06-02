@@ -4,10 +4,10 @@
 			<div v-if="feed" class="feed">
 				<webview
 					class="video"
-					src="https://www.ipcamlive.com/5ed5d5372dda0"
+					:src="feed"
 					webpreferences="allowRunningInsecureContent"
 					disablewebsecurity
-					partition="persist:ipcamlive"
+					:partition="Math.random()"
 				></webview>
 			</div>
 			<q-item class="q-px-sm">

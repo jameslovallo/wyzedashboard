@@ -286,6 +286,7 @@
 			document.querySelectorAll(".video").forEach(el => {
 				el.addEventListener("dom-ready", function() {
 					el.insertCSS(body + playerdiv + playeriframe);
+					el.style.pointerEvents = "none";
 				});
 			});
 

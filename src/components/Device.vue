@@ -2,7 +2,13 @@
 	<div class="device col col-xs-12 col-sm-6 col-md-3 q-pa-sm">
 		<q-card bordered rounded flat>
 			<div v-if="feed" class="feed">
-				<webview class="video" :src="feed"></webview>
+				<webview
+					class="video"
+					src="https://www.ipcamlive.com/5ed5d5372dda0"
+					webpreferences="allowRunningInsecureContent"
+					disablewebsecurity
+					partition="persist:ipcamlive"
+				></webview>
 			</div>
 			<q-item class="q-px-sm">
 				<q-item-section avatar>

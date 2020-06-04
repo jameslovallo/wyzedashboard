@@ -14,7 +14,9 @@
 					src="~assets/wyze-logo-white.svg"
 					width="110px"
 					class="q-mr-md"
+					:style="mac ? 'margin-left: 70px' : ''"
 				/>
+				<q-space v-if="mac" />
 				<q-btn
 					:icon="icons.plus"
 					flat
@@ -33,8 +35,9 @@
 					size="lg"
 					@click="edit = !edit"
 				/>
-				<q-space />
+				<q-space v-if="!mac" />
 				<q-btn
+					v-if="!mac"
 					icon="minimize"
 					flat
 					round
@@ -42,7 +45,15 @@
 					class="no-drag"
 					@click="minimize"
 				/>
-				<q-btn icon="close" flat round dense class="no-drag" @click="close" />
+				<q-btn
+					v-if="!mac"
+					icon="close"
+					flat
+					round
+					dense
+					class="no-drag"
+					@click="close"
+				/>
 			</q-toolbar>
 		</q-header>
 		<q-page-container>
@@ -234,7 +245,7 @@
 			addDevice() {
 				this.newDevice.type = this.deviceTab;
 				this.newDevice.type === "Camera"
-					? this.cameras.push(this.newDevice)
+					? this.cameras.push(this.newDevice) && location.reload()
 					: this.devices.push(this.newDevice);
 				this.newDevice = {};
 				this.add = false;
@@ -259,6 +270,11 @@
 				if (process.env.MODE === "electron") {
 					this.$q.electron.remote.BrowserWindow.getFocusedWindow().close();
 				}
+			}
+		},
+		computed: {
+			mac() {
+				return this.$q.platform.is.platform === "mac";
 			}
 		},
 		created() {

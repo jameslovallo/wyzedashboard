@@ -29,8 +29,10 @@ function createWindow() {
    */
   mainWindow = new BrowserWindow({
     width: 1200,
-    height: 675 + (process.platform === "darwin" ? 38 : 50),
+    height: 675 + 50,
     center: true,
+    fullscreen: false,
+    fullscreenable: false,
     useContentSize: true,
     frame: process.platform === "darwin" ? undefined : false,
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : undefined,

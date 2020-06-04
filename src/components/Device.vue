@@ -22,10 +22,36 @@
 						{{ type }}
 					</q-item-label>
 				</q-item-section>
-				<q-item-section side v-if="action">
+				<q-item-section side>
 					<div class="text-primary q-gutter-xs">
-						<q-btn size="12px" flat dense label="on" @click="on" />
-						<q-btn size="12px" flat dense label="off" @click="off" />
+						<q-btn
+							v-if="on"
+							size="12px"
+							flat
+							dense
+							label="on"
+							@click="webhook(on)"
+						/>
+						<q-btn
+							v-if="off"
+							size="12px"
+							flat
+							dense
+							label="off"
+							@click="webhook(off)"
+						/>
+						<q-btn
+							v-if="record"
+							size="md"
+							flat
+							round
+							color="red"
+							:icon="icons.record"
+							@click="
+								webhook(record);
+								showNotif();
+							"
+						/>
 					</div>
 				</q-item-section>
 			</q-item>
@@ -43,12 +69,13 @@
 		mdiVideo,
 		mdiVideoOutline,
 		mdiHelp,
-		mdiPower
+		mdiPower,
+		mdiRecordRec
 	} from "@mdi/js";
 
 	export default {
 		name: "Device",
-		props: ["title", "type", "action", "feed", "webhooks_key"],
+		props: ["title", "type", "on", "off", "record", "feed", "webhooks_key"],
 		data: () => ({
 			icons: {
 				plug: mdiPowerPlug,
@@ -58,7 +85,8 @@
 				camera: mdiVideo,
 				cameraOutline: mdiVideoOutline,
 				unknown: mdiHelp,
-				power: mdiPower
+				power: mdiPower,
+				record: mdiRecordRec
 			}
 		}),
 		computed: {
@@ -74,18 +102,17 @@
 			}
 		},
 		methods: {
-			on() {
-				const action = this.action;
+			webhook(action) {
 				const key = this.webhooks_key;
 				fetch(`https://maker.ifttt.com/trigger/${action}/with/key/${key}`, {
 					method: "POST"
 				});
 			},
-			off() {
-				const action = this.action;
-				const key = this.webhooks_key;
-				fetch(`https://maker.ifttt.com/trigger/${action}_off/with/key/${key}`, {
-					method: "POST"
+			showNotif() {
+				this.$q.notify({
+					message: `Recording triggered for camera "${this.title}"`,
+					icon: this.icons.record,
+					classes: "video-toast bg-grey-10"
 				});
 			}
 		}
@@ -114,5 +141,11 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
+	}
+
+	.video-toast svg {
+		fill: red;
+		height: 36px;
+		width: 36px;
 	}
 </style>

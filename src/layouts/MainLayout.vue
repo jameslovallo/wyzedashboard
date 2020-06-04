@@ -62,8 +62,9 @@
 					<transition-group class="row">
 						<Device
 							v-for="(device, i) in devices"
-							:key="device.action"
-							:action="device.action"
+							:key="device.title"
+							:on="device.on"
+							:off="device.off"
 							:type="device.type"
 							:title="device.title"
 							:webhooks_key="webhooks_key"
@@ -84,8 +85,8 @@
 					<transition-group class="row">
 						<Device
 							v-for="(device, i) in cameras"
-							:key="device.feed"
-							:action="device.action"
+							:key="device.title"
+							:record="device.record"
 							:feed="device.feed"
 							:type="device.type"
 							:title="device.title"
@@ -127,8 +128,16 @@
 									class="q-mb-md"
 								/>
 								<q-input
-									label="IFTTT Webhook Action"
-									v-model="newDevice.action"
+									label="On (IFTTT webhook action)"
+									v-model="newDevice.on"
+									color="primary"
+									filled
+									style="min-width: 300px"
+									class="q-mb-md"
+								/>
+								<q-input
+									label="Off (IFTTT webhook action)"
+									v-model="newDevice.off"
 									color="primary"
 									filled
 									style="min-width: 300px"
@@ -170,8 +179,8 @@
 									camera's IP address.
 								</p>
 								<q-input
-									label="IFTTT Webhook Action (Optional)"
-									v-model="newDevice.action"
+									label="Record a Clip (IFTTT webhook action)"
+									v-model="newDevice.record"
 									color="primary"
 									filled
 									style="min-width: 300px"

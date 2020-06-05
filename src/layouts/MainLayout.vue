@@ -37,6 +37,22 @@
 				/>
 				<q-space v-if="!mac" />
 				<q-btn
+					icon="minimize"
+					flat
+					round
+					dense
+					class="no-drag"
+					@click="exportStorage"
+				/>
+				<q-btn
+					icon="minimize"
+					flat
+					round
+					dense
+					class="no-drag"
+					@click="loadStorage"
+				/>
+				<q-btn
 					v-if="!mac"
 					icon="minimize"
 					flat
@@ -206,6 +222,10 @@
 	import Device from "components/Device";
 	import { mdiPlusCircleOutline, mdiPencilCircleOutline } from "@mdi/js";
 
+	const fs = require("fs");
+	const homedir = require("os").homedir();
+	const { dialog } = require("electron").remote;
+
 	export default {
 		name: "MainLayout",
 
@@ -259,6 +279,49 @@
 				this.newDevice = {};
 				this.add = false;
 			},
+			async exportStorage() {
+				let dir = await dialog.showOpenDialog({
+					properties: ["openDirectory"],
+					defaultPath: homedir
+				});
+
+				if (dir != undefined) {
+					let path = await dir.filePaths;
+					fs.writeFile(
+						`${path}/devices.wyze`,
+						JSON.stringify(localStorage),
+						err => {
+							if (err) throw err;
+							this.$q.notify({
+								message: `Saved device settings to ${path}${
+									process.platform === "win32" ? "\\" : "/"
+								}devices.wyze`,
+								classes: "bg-grey-10"
+							});
+						}
+					);
+				}
+			},
+			async loadStorage() {
+				let file = await dialog.showOpenDialog({
+					defaultPath: homedir,
+					filters: [{ name: "Wyze Desktop Files", extensions: ["wyze"] }]
+				});
+
+				if (file != undefined) {
+					let raw = await fs.readFileSync(file.filePaths[0], {
+						encoding: "utf8",
+						flag: "r"
+					});
+
+					let data = JSON.parse(raw);
+					let devices = [JSON.parse(data.devices)];
+					let cameras = [JSON.parse(data.cameras)];
+					this.devices = devices[0];
+					this.cameras = cameras[0];
+					location.reload();
+				}
+			},
 			minimize() {
 				if (process.env.MODE === "electron") {
 					this.$q.electron.remote.BrowserWindow.getFocusedWindow().minimize();
@@ -267,7 +330,6 @@
 			maximize() {
 				if (process.env.MODE === "electron") {
 					const win = this.$q.electron.remote.BrowserWindow.getFocusedWindow();
-
 					if (win.isMaximized()) {
 						win.unmaximize();
 					} else {

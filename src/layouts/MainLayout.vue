@@ -277,7 +277,7 @@
 				add: false,
 				edit: false,
 				settings: false,
-				fab: false,
+				fullscreen: false,
 				deviceTab: "Bulb",
 				webhooks_key: "",
 				newDevice: {},
@@ -432,6 +432,6 @@
 		right: 0;
 		bottom: 0;
 		left: 0;
-		z-index: 1;
+		z-index: 1000;
 	}
 </style>

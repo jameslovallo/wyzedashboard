@@ -35,23 +35,15 @@
 					size="lg"
 					@click="edit = !edit"
 				/>
+				<q-btn
+					icon="settings"
+					flat
+					round
+					dense
+					class="no-drag"
+					@click="settings = true"
+				/>
 				<q-space v-if="!mac" />
-				<q-btn
-					icon="minimize"
-					flat
-					round
-					dense
-					class="no-drag"
-					@click="exportStorage"
-				/>
-				<q-btn
-					icon="minimize"
-					flat
-					round
-					dense
-					class="no-drag"
-					@click="loadStorage"
-				/>
 				<q-btn
 					v-if="!mac"
 					icon="minimize"
@@ -127,12 +119,12 @@
 							<q-space />
 							<q-btn icon="close" flat round dense v-close-popup />
 						</q-card-section>
-						<q-separator />
-						<q-tabs v-model="deviceTab">
+						<q-tabs v-model="deviceTab" indicator-color="primary">
 							<q-tab name="Bulb" label="Bulb" />
 							<q-tab name="Plug" label="Plug" />
 							<q-tab name="Camera" label="Camera" />
 						</q-tabs>
+						<q-separator />
 						<q-tab-panels v-model="deviceTab">
 							<q-tab-panel v-for="d in ['Bulb', 'Plug']" :key="d" :name="d">
 								<q-input
@@ -159,12 +151,6 @@
 									style="min-width: 300px"
 									class="q-mb-md"
 								/>
-								<q-btn
-									label="Add Device"
-									icon="add"
-									color="primary"
-									@click="addDevice"
-								/>
 							</q-tab-panel>
 							<q-tab-panel name="Camera">
 								<q-input
@@ -176,24 +162,13 @@
 									class="q-mb-md"
 								/>
 								<q-input
-									label="IPCamLive Camera uRL"
+									label="IPCamLive Camera URL"
 									v-model="newDevice.feed"
 									color="primary"
 									filled
 									style="min-width: 300px"
 									class="q-mb-md"
 								/>
-								<p class="caption text-grey-8">
-									Your camera's "live" tab url on
-									<a href="www.ipcamlive.com">ipcamlive.com</a>. To connect your
-									camera to ipcamlive, you will need to install the
-									<a
-										href="https://support.wyzecam.com/hc/en-us/articles/360026245231-Wyze-Cam-RTSP"
-										>Wyze RTSP firmware</a
-									>
-									on your camera and forward port 554 on your router for your
-									camera's IP address.
-								</p>
 								<q-input
 									label="Record a Clip (IFTTT webhook action)"
 									v-model="newDevice.record"
@@ -202,14 +177,57 @@
 									style="min-width: 300px"
 									class="q-mb-md"
 								/>
-								<q-btn
-									label="Add Device"
-									icon="add"
-									color="primary"
-									@click="addDevice"
-								/>
 							</q-tab-panel>
 						</q-tab-panels>
+						<q-card-actions>
+							<q-btn
+								label="Add Device"
+								icon="add"
+								color="primary"
+								flat
+								@click="addDevice"
+							/>
+							<q-space />
+							<q-btn
+								label="Help"
+								icon="help"
+								flat
+								dense
+								@click="nativeLink('')"
+							/>
+						</q-card-actions>
+					</q-card>
+				</q-dialog>
+				<q-dialog v-model="settings">
+					<q-card>
+						<q-card-section class="row">
+							<div class="text-h6">Settings</div>
+							<q-space />
+							<q-btn icon="close" flat round dense v-close-popup />
+						</q-card-section>
+						<q-card-section>
+							<q-input
+								label="IFTTT Webhook Key"
+								v-model="webhooks_key"
+								color="primary"
+								filled
+								style="min-width: 300px"
+							/>
+						</q-card-section>
+						<q-card-actions>
+							<q-btn
+								label="Export Devices"
+								flat
+								color="primary"
+								@click="exportDevices"
+							/>
+							<q-btn
+								label="Import Devices"
+								flat
+								color="primary"
+								@click="importDevices"
+							/>
+						</q-card-actions>
 					</q-card>
 				</q-dialog>
 			</q-page>
@@ -225,6 +243,7 @@
 	const fs = require("fs");
 	const homedir = require("os").homedir();
 	const { dialog } = require("electron").remote;
+	const { shell } = require("electron");
 
 	export default {
 		name: "MainLayout",
@@ -238,35 +257,15 @@
 			return {
 				add: false,
 				edit: false,
+				settings: false,
 				deviceTab: "Bulb",
 				icons: {
 					plus: mdiPlusCircleOutline,
 					edit: mdiPencilCircleOutline
 				},
-				webhooks_key: "dQpcbai4uZ28My2lDWzo_N",
+				webhooks_key: "",
 				newDevice: {},
-				devices: [
-					{
-						action: "bedroom_light",
-						title: "Bedroom",
-						type: "Bulb"
-					},
-					{
-						action: "bedroom_ac",
-						title: "Bedroom AC",
-						type: "Plug"
-					},
-					{
-						action: "nursery_ac",
-						title: "Nursery AC",
-						type: "Plug"
-					},
-					{
-						action: "living_room_light",
-						title: "Living Room",
-						type: "Bulb"
-					}
-				],
+				devices: [],
 				cameras: []
 			};
 		},
@@ -279,7 +278,10 @@
 				this.newDevice = {};
 				this.add = false;
 			},
-			async exportStorage() {
+			nativeLink(link) {
+				shell.openExternal(link);
+			},
+			async exportDevices() {
 				let dir = await dialog.showOpenDialog({
 					properties: ["openDirectory"],
 					defaultPath: homedir
@@ -302,7 +304,7 @@
 					);
 				}
 			},
-			async loadStorage() {
+			async importDevices() {
 				let file = await dialog.showOpenDialog({
 					defaultPath: homedir,
 					filters: [{ name: "Wyze Desktop Files", extensions: ["wyze"] }]
@@ -317,8 +319,10 @@
 					let data = JSON.parse(raw);
 					let devices = [JSON.parse(data.devices)];
 					let cameras = [JSON.parse(data.cameras)];
+					let webhooks_key = data.webhooks_key;
 					this.devices = devices[0];
 					this.cameras = cameras[0];
+					this.webhooks_key = webhooks_key;
 					location.reload();
 				}
 			},
@@ -355,6 +359,9 @@
 			if (localStorage.cameras) {
 				this.cameras = JSON.parse(localStorage.cameras);
 			}
+			if (localStorage.webhooks_key) {
+				this.webhooks_key = localStorage.webhooks_key;
+			}
 		},
 		watch: {
 			devices(newDevices) {
@@ -362,6 +369,9 @@
 			},
 			cameras(newCameras) {
 				localStorage.cameras = JSON.stringify(newCameras);
+			},
+			webhooks_key(newWebhooks_key) {
+				localStorage.webhooks_key = newWebhooks_key;
 			}
 		},
 		mounted() {

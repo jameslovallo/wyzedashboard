@@ -18,24 +18,6 @@
 				/>
 				<q-space v-if="mac" />
 				<q-btn
-					:icon="icons.plus"
-					flat
-					round
-					dense
-					class="no-drag"
-					size="lg"
-					@click="add = true"
-				/>
-				<q-btn
-					:icon="icons.edit"
-					flat
-					round
-					dense
-					class="no-drag"
-					size="lg"
-					@click="edit = !edit"
-				/>
-				<q-btn
 					icon="settings"
 					flat
 					round
@@ -83,7 +65,10 @@
 								color="red"
 								size="xs"
 								round
-								@click="devices.splice(i, 1)"
+								@click="
+									devices.splice(i, 1);
+									edit = false;
+								"
 								v-show="edit === true"
 							/>
 						</Device>
@@ -106,7 +91,10 @@
 								color="red"
 								size="xs"
 								round
-								@click="cameras.splice(i, 1), (edit = false)"
+								@click="
+									cameras.splice(i, 1);
+									edit = false;
+								"
 								v-show="edit === true"
 							/>
 						</Device>
@@ -231,6 +219,38 @@
 					</q-card>
 				</q-dialog>
 			</q-page>
+			<q-fab
+				v-model="fab"
+				v-if="!edit"
+				vertical-actions-align="right"
+				color="primary"
+				icon="add"
+				direction="up"
+				style="position: absolute; bottom: 24px; right: 24px;"
+			>
+				<q-fab-action
+					label-position="left"
+					color="primary"
+					@click="add = true"
+					icon="add"
+					label="Add a Device"
+				/>
+				<q-fab-action
+					label-position="left"
+					color="red"
+					@click="edit = !edit"
+					icon="delete"
+					label="Remove a Device"
+				/>
+			</q-fab>
+			<q-fab
+				v-if="edit"
+				@click="edit = false"
+				color="red"
+				icon="close"
+				label="Cancel"
+				style="position: absolute; bottom: 24px; right: 24px;"
+			/>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -238,7 +258,6 @@
 <script>
 	import draggable from "vuedraggable";
 	import Device from "components/Device";
-	import { mdiPlusCircleOutline, mdiPencilCircleOutline } from "@mdi/js";
 
 	const fs = require("fs");
 	const homedir = require("os").homedir();
@@ -258,11 +277,8 @@
 				add: false,
 				edit: false,
 				settings: false,
+				fab: false,
 				deviceTab: "Bulb",
-				icons: {
-					plus: mdiPlusCircleOutline,
-					edit: mdiPencilCircleOutline
-				},
 				webhooks_key: "",
 				newDevice: {},
 				devices: [],

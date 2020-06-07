@@ -259,6 +259,8 @@
 	import draggable from "vuedraggable";
 	import Device from "components/Device";
 
+	const jsonfile = require("jsonfile");
+
 	const fs = require("fs");
 	const homedir = require("os").homedir();
 	const { dialog } = require("electron").remote;
@@ -277,7 +279,7 @@
 				add: false,
 				edit: false,
 				settings: false,
-				fullscreen: false,
+				fab: false,
 				deviceTab: "Bulb",
 				webhooks_key: "",
 				newDevice: {},
@@ -305,41 +307,41 @@
 
 				if (dir != undefined) {
 					let path = await dir.filePaths;
-					fs.writeFile(
-						`${path}/devices.wyze`,
-						JSON.stringify(localStorage),
-						err => {
-							if (err) throw err;
-							this.$q.notify({
-								message: `Saved device settings to ${path}${
-									process.platform === "win32" ? "\\" : "/"
-								}devices.wyze`,
-								classes: "bg-grey-10"
-							});
-						}
-					);
+					let settings = {
+						devices: this.devices,
+						cameras: this.cameras,
+						webhooks_key: this.webhooks_key
+					};
+
+					const file = `${path}/wyze_devices.json`;
+					jsonfile.writeFile(file, settings, function(err) {
+						if (err) console.error(err);
+					});
+
+					this.$q.notify({
+						message: `Saved device settings to ${path}${
+							process.platform === "win32" ? "\\" : "/"
+						}devices.wyze`,
+						classes: "bg-grey-10"
+					});
 				}
 			},
 			async importDevices() {
 				let file = await dialog.showOpenDialog({
 					defaultPath: homedir,
-					filters: [{ name: "Wyze Desktop Files", extensions: ["wyze"] }]
+					filters: [{ name: "JSON Files", extensions: ["json"] }]
 				});
 
 				if (file != undefined) {
-					let raw = await fs.readFileSync(file.filePaths[0], {
-						encoding: "utf8",
-						flag: "r"
-					});
-
-					let data = JSON.parse(raw);
-					let devices = [JSON.parse(data.devices)];
-					let cameras = [JSON.parse(data.cameras)];
-					let webhooks_key = data.webhooks_key;
-					this.devices = devices[0];
-					this.cameras = cameras[0];
-					this.webhooks_key = webhooks_key;
-					location.reload();
+					let data;
+					jsonfile
+						.readFile(file.filePaths[0])
+						.then(obj => {
+							this.devices = obj.devices;
+							this.cameras = obj.cameras;
+							this.webhooks_key = obj.webhooks_key;
+						})
+						.catch(error => console.error(error));
 				}
 			},
 			minimize() {

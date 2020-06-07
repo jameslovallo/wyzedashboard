@@ -15,6 +15,7 @@
   "dependencies": {
     "@mdi/js": "^5.3.45",
     "@quasar/extras": "^1.0.0",
+    "jsonfile": "^6.0.1",
     "quasar": "^1.0.0",
     "vuedraggable": "^2.23.2"
   },

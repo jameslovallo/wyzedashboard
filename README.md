@@ -22,7 +22,7 @@ Download the app for your platform from the [releases page](https://github.com/p
 
 The app uses IFTTT to turn devices on or off, since Wyze does not provide a developer API. Sadly, there is no way to know if the device is already on or off and display its current status.
 
-1. Go to [https://ifttt.com/maker_webhooks](https://ifttt.com/maker_webhooks) and click the "Documentation" button. It will tell you your unique webhook key at the top of the page. Copy this key, open the app, click the settings (gear) icon in the toolbar and past the key into the "IFTTT Webhook Key" field. You only have to do this once.
+1. Go to [https://ifttt.com/maker_webhooks](https://ifttt.com/maker_webhooks) and click the "Documentation" button. It will tell you your unique webhook key at the top of the page. Copy this key, open the app, click the settings (gear) icon in the toolbar and paste the key into the "IFTTT Webhook Key" field. You only have to do this once.
 2. Now go back to IFTTT and create two new applets where 'THIS' = Webhook and 'THAT' = WYZE. The first applet will be to turn your device on, the second to turn it off. You will be asked to enter a webhook 'action' for each. Remember the name of the actions, you will need them in step 4.
 3. Click the plus button at the bottom right corner and choose 'Add a Device'. Choose the 'Bulb' or 'Plug' tab at the top.
 4. Give your device a name and enter your 'on' action and 'off' action in the fields below, then click 'Add Device.'

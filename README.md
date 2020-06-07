@@ -6,7 +6,7 @@ This is a desktop application for power users to control/view their Wyze bulbs, 
 
 Because Wyze doesn't provide a developer API, this is only possible by integrating with IFTTT webhooks and [IPCamLive](https://www.ipcamlive.com). I am investigating ways to stream RTSP video without IPCamLive but RTSP is hard to display in web/electron applications. If you know anything about the subject and wish to help, please [contact me](https://patrickonparker.com).
 
-**I cannot stress enough that this app is not intended for everyone: it is difficult to set up and is meant for power users who want a lighter alternative to BlueStacks on desktop, or who need to be able to view multiple cameras at once.** It is in-development and relies on several 3rd-party services and hacks in order to work. Use at your own risk. Also, know that I am a new dad and don't have a ton of time to provide support in the forums or on Reddit, please support each other and help answer each other's questions.
+**I cannot stress enough that this app is not intended for everyone: it is difficult to set up and is meant for power users who want a lighter alternative to BlueStacks on desktop, or who need to be able to view multiple cameras at once.** It is in-development and relies on several 3rd-party services and hacks in order to work. Use at your own risk. Also, know that I am a new dad and don't have a ton of time to provide support, so please help support each other and answer each other's questions [on Reddit](https://www.reddit.com/r/wyzecam/comments/gyhh90/unofficial_winmac_app_release/).
 
 ### [Download](https://github.com/patrickonparker/wyzedashboard/releases/tag/0.0.1)
 

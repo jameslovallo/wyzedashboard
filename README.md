@@ -1,12 +1,18 @@
 # Wyze Desktop
 
+![](src/assets/screenshot.png)
+
 This is a desktop application for power users to control/view their Wyze bulbs, plugs and cameras from a Mac or PC. (For linux support, please download and build yourself.)
 
 Because Wyze doesn't provide a developer API, this is only possible by integrating with IFTTT webhooks and [IPCamLive](https://www.ipcamlive.com).
 
 **I cannot stress enough that this app is not intended for everyone: it is difficult to set up and is meant for power users who want a lighter alternative to BlueStacks on desktop, or who need to be able to view multiple cameras at once.** It is in-development and relies on several 3rd-party services and hacks in order to work. Use at your own risk. Also, know that I am a new dad and don't have a ton of time to provide support in the forums or on Reddit, please support each other and help answer each other's questions.
 
-![](src/assets/screenshot.png)
+### [Download](https://github.com/patrickonparker/wyzedashboard/releases/tag/0.0.1)
+
+All future releases will be found at the project's [releases](https://github.com/patrickonparker/wyzedashboard/releases) page.
+
+---
 
 ## Getting Started
 
@@ -35,6 +41,10 @@ This app embeds IPCamLive camera feeds, which must be set up through their servi
 6. Go to your cam's 'Live' tab and copy the link.
 7. In the app, click 'Add New Device', choose 'Camera' at the top, and enter your device's name and IPCamLive 'live' link.
 8. You can optionally add an IFTTT webhook action to trigger a recording on the device.
+
+## Known Issues
+
+- Importing saved devices is crashing the Mac app. For now, if you use both the Mac and Windows versions of the app, please manage your devices from the Mac app, then export your devices and import them in the Windows app.
 
 ## Build from Source (i.e. for Linux)
 

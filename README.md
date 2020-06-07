@@ -48,20 +48,22 @@ This app embeds IPCamLive camera feeds, which must be set up through their servi
 
 ## Build from Source (i.e. for Linux)
 
+You will need to have node and yarn installed.
+
 ### Install Dependencies
 
 ```bash
 yarn
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Test the app in development mode
 
 ```bash
-quasar dev
+quasar d
 ```
 
 ### Build the app for production
 
 ```bash
-quasar build
+quasar b -m electron
 ```

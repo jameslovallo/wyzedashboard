@@ -321,7 +321,7 @@
 					this.$q.notify({
 						message: `Saved device settings to ${path}${
 							process.platform === "win32" ? "\\" : "/"
-						}devices.wyze`,
+						}wyze_devices.json`,
 						classes: "bg-grey-10"
 					});
 				}
@@ -340,6 +340,7 @@
 							this.devices = obj.devices;
 							this.cameras = obj.cameras;
 							this.webhooks_key = obj.webhooks_key;
+							location.reload();
 						})
 						.catch(error => console.error(error));
 				}

@@ -4,7 +4,7 @@
 
 This is a desktop application for power users to control/view their Wyze bulbs, plugs and cameras from a Mac or PC. (For linux support, please download and build yourself.)
 
-Because Wyze doesn't provide a developer API, this is only possible by integrating with IFTTT webhooks and [IPCamLive](https://www.ipcamlive.com).
+Because Wyze doesn't provide a developer API, this is only possible by integrating with IFTTT webhooks and [IPCamLive](https://www.ipcamlive.com). I am investigating ways to stream RTSP video without IPCamLive but RTSP is hard to display in web/electron applications. If you know anything about the subject and wish to help, please [contact me](https://patrickonparker.com).
 
 **I cannot stress enough that this app is not intended for everyone: it is difficult to set up and is meant for power users who want a lighter alternative to BlueStacks on desktop, or who need to be able to view multiple cameras at once.** It is in-development and relies on several 3rd-party services and hacks in order to work. Use at your own risk. Also, know that I am a new dad and don't have a ton of time to provide support in the forums or on Reddit, please support each other and help answer each other's questions.
 
@@ -32,7 +32,7 @@ The app uses IFTTT to turn devices on or off, since Wyze does not provide a deve
 
 This app embeds IPCamLive camera feeds, which must be set up through their service. On average I experience 5-12 seconds of latency, which I think is pretty tolerable. IPCamLive provides a valuable service and this app uses several hacks to embed their feeds, even using a free tier, including refreshing the feed every 4 minutes so that it doesn't time out. If you use their service with this app, please support them by paying for a subscription.
 
-1. Get a dynamic DNS provider (I use [noip](noip.com) through my Netgear router) and set up a dynamic dns hostname. (You only have to do this once.)
+1. Get a dynamic DNS provider (I use [noip](https://www.noip.com) through my Netgear router) and set up a dynamic dns hostname. (You only have to do this once.)
 2. Install the [RTSP firmware](https://support.wyzecam.com/hc/en-us/articles/360026245231-Wyze-Cam-RTSP) for your camera.
 3. Get your device's RTSP url.
 4. Forward port 554 to a unique port for your device in your router's settings. I have 3 cameras and use external ports 554, 555 and 556.

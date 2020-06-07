@@ -181,7 +181,9 @@
 								icon="help"
 								flat
 								dense
-								@click="nativeLink('')"
+								@click="
+									nativeLink('https://github.com/patrickonparker/wyzedashboard')
+								"
 							/>
 						</q-card-actions>
 					</q-card>

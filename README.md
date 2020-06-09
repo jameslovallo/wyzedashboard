@@ -42,9 +42,13 @@ This app embeds IPCamLive camera feeds, which must be set up through their servi
 7. In the app, click 'Add New Device', choose 'Camera' at the top, and enter your device's name and IPCamLive 'live' link.
 8. You can optionally add an IFTTT webhook action to trigger a recording on the device.
 
+---
+
 ## Known Issues
 
 - Importing saved devices is crashing the Mac app. For now, if you use both the Mac and Windows versions of the app, please manage your devices from the Mac app, then export your devices and import them in the Windows app.
+
+---
 
 ## Build from Source (i.e. for Linux)
 

@@ -1,22 +1,21 @@
 <template>
 	<div class="device col col-xs-12 col-sm-6 col-md-3 q-pa-sm">
-		<q-card bordered rounded flat>
+		<q-card :bordered="!$q.dark.isActive" rounded flat style="overflow: hidden;">
 			<div v-if="feed" class="feed">
 				<webview
 					class="video"
 					:src="feed"
 					webpreferences="allowRunningInsecureContent"
 					disablewebsecurity
-					:partition="Math.random()"
 				></webview>
 			</div>
 			<q-item class="q-px-sm">
 				<q-item-section avatar>
-					<q-icon :name="icon" color="grey-10" size="34px" />
+					<q-icon :name="icon" size="34px" />
 				</q-item-section>
 				<q-item-section>
 					<q-item-label lines="1">
-						<span class="text-grey-10">{{ title }}</span>
+						<span>{{ title }}</span>
 					</q-item-label>
 					<q-item-label caption lines="1">
 						{{ type }}

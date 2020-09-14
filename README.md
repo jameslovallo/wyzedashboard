@@ -1,3 +1,6 @@
+# Note: I do not recommend this solution anymore!
+IFTTT has gone premium, drastically reducing the number of actions you can create with a free tier, and IPCamLive cams are kind of a pain in the ass to manage. Also, Wyze has officially announced that they are creating a native app for desktop streaming. In the meantime, I am using a [Wyze Band](https://wyze.com/wyze-band) and [Alexa for desktop](https://www.microsoft.com/en-us/p/alexa/9n12z3cctcnz?cid=A4PCLP3&rtc=1&SilentAuth=1&wa=wsignin1.0&activetab=pivot:overviewtab) (Windows) to control my devices, and the free tier of [Perfect IP Camera Viewer](https://www.perfect-surveillance.com/perfect-ip-camera-viewer.html) to view cameras.
+
 # Wyze Desktop
 
 ![](src/assets/screenshot.png)
